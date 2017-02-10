@@ -3,3 +3,4 @@ ml-latest/
 ml-latest-small/
 ml-1m/
 .ipynb_checkpoints/
+*.pyc
