@@ -1,0 +1,11 @@
+,10M rekomendacja,10M wstępne obliczenia
+"UUCF k=30, cosine",35.95s,0s
+"UUCF k=30, Pearson
+Threshold=50",43.21s,0s
+IICF k=30,8.04s,152.24s
+"IICF k=30
+-baseline",8.01s,161.28s
+SO Basic,"7.97s,
+7.79s w wersji uproszczonej",274.55s
+SO Weighted,8.15s,274.43s
+SO Bi-polar,8.47s,556.82s
