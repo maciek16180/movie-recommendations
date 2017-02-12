@@ -15,13 +15,14 @@ def calculate_similarities_SO(scores, nan_to_0=True):
     return np.nan_to_num(dists / cards), cards
 
 
-def scores_SO_basic(train, query, target_inds, dists_cards=None, min_rate=None):
+def scores_SO_basic(train, query, target_inds, dists_cards=None, min_rate=None, simplified=False):
     if dists_cards is None:
         raise NotImplementedError('distances and cardinalities have to be precomputed')
         
     dists, cards = dists_cards
     baselines = baseline_predictors(train, query)
-    cards_nonzero = cards > 0
+    if not simplified:
+        cards_nonzero = cards > 0
         
     ratings = []    
         
@@ -30,10 +31,14 @@ def scores_SO_basic(train, query, target_inds, dists_cards=None, min_rate=None):
         user_rated = user_ratings > 0
         
         targets = np.where(target_inds[u_idx])[0]        
-
-        weights = cards_nonzero[targets][:, user_rated]
-        scores = dists[targets][:, user_rated] + user_ratings[user_rated]
-        scores = (scores * weights).sum(axis=1) / weights.sum(axis=1)
+        
+        if not simplified:
+            weights = cards_nonzero[targets][:, user_rated]
+            scores = dists[targets][:, user_rated] + user_ratings[user_rated]
+            scores = (scores * weights).sum(axis=1) / weights.sum(axis=1)
+        else:
+            user_mean = user_ratings.sum() / user_rated.sum()
+            scores = dists[targets][:, user_rated].mean(axis=1) + user_mean
         
         estimated_ratings = np.zeros(query.shape[1])
         estimated_ratings[targets] = scores
